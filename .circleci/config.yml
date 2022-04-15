@@ -18,13 +18,8 @@ jobs:
       - checkout
       - aws-cli/install
       - kubernetes/install
-      - helm/install-helm-client:
-          version: '3.0' 
       - setup_remote_docker:
           version: 20.10.12
-      - run: 
-          name: AWS Account
-          command: AWS_ACCOUNT="310228935478"
       - aws-cli/setup:
           configure-default-region: true 
           configure-profile-region: true 
@@ -33,6 +28,9 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY_ID 
           aws-region: AWS_DEFAULT_REGION 
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      - run:
+          name: Install Helm 3.0
+          command: (curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh) && (chmod 700 get_helm.sh) && .(/get_helm.sh)
       - run: 
           name: Get Current AWS Target
           command: echo AWS Account Number is $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,)
