@@ -44,7 +44,9 @@ jobs:
       - run:
           name: Use .kube config
           command: kubectl config use-context arn:aws:eks:us-west-2:310228935478:cluster/at-interviews-cluster
-        
+      - run: 
+          name: Login into Amazon ECR
+          command: aws ecr get-login-password --profile default --region $DEFAULT_AWS_LOCATION | docker login --username AWS --password-stdin $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,).dkr.ecr.us-west-2.amazonaws.com
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
