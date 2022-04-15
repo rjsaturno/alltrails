@@ -19,6 +19,8 @@ jobs:
       - aws-cli/install
       - kubernetes/install
       - helm/install-helm-client
+      - setup_remote_docker:
+          version: 19.03.13
       - run: 
           name: AWS Account
           command: AWS_ACCOUNT="310228935478"
