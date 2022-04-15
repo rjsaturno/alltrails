@@ -53,6 +53,9 @@ jobs:
       - run:
           name: Build Docker Container
           command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,).dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
+      - run:
+          name: Send Container to ECR
+          command: docker push $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,).dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD)
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
