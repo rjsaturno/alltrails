@@ -1,0 +1,35 @@
+
+
+
+
+
+
+###########################################################################
+###
+### Congratulations!  If you're seeing this, the Helm chart deployed   ###
+### successfully!  Now let's verify that this thing can be reached     ###
+### from Across The Internet™.....                                     ###
+###
+###########################################################################
+
+
+1. Get the application URL by running these commands:
+ kubectl \
+    --namespace {{ .Release.Namespace }} \
+    get ingress 
+    
+(Note the ingress name, should be something like 'helloworld')
+
+2. Then run
+ kubectl \
+    --namespace {{ .Release.Namespace }} \
+    describe ingress helloworld
+
+3. Look for the 'Address:' line, similar (but nowhere near identical to) 
+  Address:    k8s-alltrails-hellowor-bdb5e5077e-1514487983.us-west-2.elb.amazonaws.com
+
+4. Plug that address into your web-browser, and the test page should show up.  If it complains about 'Address not found', give it a couple of minutes for DNS to catch up and try again! 
+
+5. If you see a message about '<error: endpoints "default-http-backend" not found>', you can safely ignore that.  
+
+.
