@@ -19,7 +19,7 @@ jobs:
       - aws-cli/install
       - kubernetes/install
       - helm/install-helm-client:
-          version: '3.0.0' 
+          version: '3.0' 
       - setup_remote_docker:
           version: 20.10.12
       - run: 
