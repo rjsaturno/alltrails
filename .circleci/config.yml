@@ -41,6 +41,10 @@ jobs:
       - run:
           name: Update .kube config file w/ eks authenication info
           command: aws eks update-kubeconfig --profile default --region $AWS_DEFAULT_REGION --name at-interviews-cluster
+      - run: Use .kube config
+          name: Update .kube config file w/ eks authenication info
+          command: kubectl config use-context arn:aws:eks:us-west-2:310228935478:cluster/at-interviews-cluster
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
