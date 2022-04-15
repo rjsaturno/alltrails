@@ -37,8 +37,8 @@ jobs:
           command: CURRENT_AWS_TARGET=$(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,)
       - run: 
           name: AWS Account Check
-          command: if [[ ! "$CURRENT_AWS_TARGET" = "$AWS_ACCOUNT" ]]; then \
-            echo "Expected AWS account number of $AWS_ACCOUNT, got $CURRENT_AWS_TARGET instead" 
+          command: if [[ ! "$CURRENT_AWS_TARGET" = "$AWS_ACCOUNT" ]]; then
+            echo "Expected AWS account number of $AWS_ACCOUNT, got $CURRENT_AWS_TARGET instead"
             exit 1
             fi
 # Invoke jobs via workflows
