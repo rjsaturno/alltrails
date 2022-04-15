@@ -49,7 +49,7 @@ jobs:
           command: aws ecr get-login-password --profile default --region us-west-2 | docker login --username AWS --password-stdin $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,).dkr.ecr.us-west-2.amazonaws.com
       - run:
           name: Build Docker Container
-          command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t 310228935478.dkr.ecr.us-west-2.amazonaws.com/helloworld:$COMMIT_ID .
+          command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t 310228935478.dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
