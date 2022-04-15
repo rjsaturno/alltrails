@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@2.0.3
-
+  kubernetes: circleci/kubernetes@1.3.0
 jobs:
   build-and-deploy:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -14,6 +14,7 @@ jobs:
     steps:
       - checkout
       - aws-cli/install
+      - kubernetes/install
       - run: 
           name: Get Commit ID
           command: echo commit ID is $(git rev-parse --verify --short HEAD)
