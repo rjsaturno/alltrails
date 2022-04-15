@@ -4,6 +4,7 @@ orbs:
   aws-cli: circleci/aws-cli@3.0.0
   kubernetes: circleci/kubernetes@1.3.0
   helm: circleci/helm@1.2.0
+  docker: circleci/docker@2.0.3
 
 jobs:
   build-and-deploy:
@@ -49,8 +50,7 @@ jobs:
           command: aws ecr get-login-password --profile default --region us-west-2 | docker login --username AWS --password-stdin $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,).dkr.ecr.us-west-2.amazonaws.com
       - run:
           name: Build Docker Container
-          command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t 310228935478.dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
-
+          command: docker build --no-cache -t helloworld:083ed6c -t 310228935478.dkr.ecr.us-west-2.amazonaws.com/helloworld:083ed6c .
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
