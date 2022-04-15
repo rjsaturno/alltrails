@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Update .kube config file w/ eks authenication info
           command: awk eks update-kubeconfig \
-           --profile default \
+           --profile at-interviews \
            --region AWS_DEFAULT_REGION \
            --name at-interviews-cluster
 # Invoke jobs via workflows
