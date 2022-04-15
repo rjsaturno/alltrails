@@ -14,6 +14,7 @@ jobs:
       # replace with your preferred image
       - image: cimg/base:stable
     steps:
+      - github-cli/setup
       - github-cli/clone:
           repo: gh repo clone alltrails/at-interviews-helloworld 
       - aws-cli/setup:
