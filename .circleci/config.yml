@@ -19,6 +19,9 @@ jobs:
       - kubernetes/install
       - helm/install-helm-client
       - run: 
+          name: AWS Account
+          command: AWS_ACCOUNT="310228935478"
+      - run: 
           name: Get Commit ID
           command: echo commit ID is $(git rev-parse --verify --short HEAD)
       - aws-cli/setup:
@@ -31,7 +34,9 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
       - run: 
           name: Get Current AWS Target
-          command: aws --profile default sts get-caller-identity
+          command: CURRENT_AWS_TARGET=$(aws --profile at-interviews \
+            sts get-caller-identity \
+            | grep Account
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
