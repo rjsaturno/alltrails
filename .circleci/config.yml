@@ -35,10 +35,9 @@ jobs:
       - run: 
           name: Get Commit ID
           command: echo commit ID is $(git rev-parse --verify --short HEAD)
-      - run: NAMESPACE=$(whoami)
       - run:
           name: Display Namespace
-          command: echo $NAMESPACE
+          command: echo $(whoami)
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
