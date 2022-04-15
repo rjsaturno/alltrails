@@ -29,8 +29,8 @@ jobs:
           aws-region: AWS_DEFAULT_REGION 
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
       - run:
-          name: Install Helm 3.0
-          command: (curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh) && (chmod 700 get_helm.sh) && .(/get_helm.sh)
+          name: Install Helm 
+          command: (curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh) && (chmod 700 get_helm.sh) && (./get_helm.sh)
       - run: 
           name: Get Current AWS Target
           command: echo AWS Account Number is $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,)
