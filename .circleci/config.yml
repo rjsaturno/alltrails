@@ -1,10 +1,9 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@2.0.3
+  aws-cli: circleci/aws-cli@3.0.0
   kubernetes: circleci/kubernetes@1.3.0
   helm: circleci/helm@1.2.0
-  docker: circleci/docker@2.0.3
 
 jobs:
   build-and-deploy:
@@ -19,10 +18,20 @@ jobs:
       - aws-cli/install
       - kubernetes/install
       - helm/install-helm-client
-      - docker/install-docker
       - run: 
           name: Get Commit ID
           command: echo commit ID is $(git rev-parse --verify --short HEAD)
+      - aws-cli/setup:
+          configure-default-region: true 
+          configure-profile-region: true 
+          disable-aws-pager: true 
+          override-installed: false 
+          aws-access-key-id: AWS_ACCESS_KEY_ID 
+          aws-region: AWS_DEFAULT_REGION 
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      - run: 
+          name: Get Current AWS Target
+          command: aws --profile at-interviews sts get-caller-identity
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
