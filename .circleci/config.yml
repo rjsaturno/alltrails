@@ -37,7 +37,7 @@ jobs:
           command: CURRENT_AWS_TARGET=$(aws --profile at-interviews \
             sts get-caller-identity \
             | grep Account \
-            |)
+            )
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
