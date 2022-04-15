@@ -34,9 +34,9 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
       - run: 
           name: Get Current AWS Target
-          command: CURRENT_AWS_TARGET=$(aws --profile default sts get-caller-identity | grep Account \
-            | `awk -F:\
-             '{print $2}'` )
+          command: aws --profile default sts get-caller-identity | grep Account \
+            | awk -F:\
+             '{print $2}' 
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
