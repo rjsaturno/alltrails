@@ -4,6 +4,7 @@ orbs:
   aws-cli: circleci/aws-cli@2.0.3
   kubernetes: circleci/kubernetes@1.3.0
   helm: circleci/helm@1.2.0
+  docker: circleci/docker@2.0.3
 
 jobs:
   build-and-deploy:
@@ -18,6 +19,7 @@ jobs:
       - aws-cli/install
       - kubernetes/install
       - helm/install-helm-client
+      - docker/install-docker
       - run: 
           name: Get Commit ID
           command: echo commit ID is $(git rev-parse --verify --short HEAD)
