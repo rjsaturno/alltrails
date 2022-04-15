@@ -16,7 +16,7 @@ jobs:
     steps:
       - github-cli/setup
       - github-cli/clone:
-          repo: gh repo clone alltrails/at-interviews-helloworld 
+          repo: https://github.com/alltrails/at-interviews-helloworld.git
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
           aws-secret-access-key:  AWS_SECRET_ACCESS_KEY 
