@@ -3,7 +3,7 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  check-it-out:
+  build-and-deploy:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
@@ -13,12 +13,21 @@ jobs:
     steps:
       - checkout
       - run: 
+          name: Install AWS CLI
+          command: brew install awscli
+      - run: 
+          name: Install Kubectl
+          command: brew install kubectl
+      - run: 
+          name: Install Helm
+          command: brew install helm
+      - run: 
           name: Get Commit ID
           command: echo commit ID is $(git rev-parse --verify --short HEAD)
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  cio-workflow:
+  pipeline-workflow:
     jobs:
-      - check-it-out
+      - build-and-deploy
