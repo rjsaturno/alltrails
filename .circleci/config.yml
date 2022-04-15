@@ -40,7 +40,7 @@ jobs:
           command: echo $(whoami)
       - run:
           name: Update .kube config file w/ eks authenication info
-          command: aws eks update-kubeconfig --profile at-interviews --region $AWS_DEFAULT_REGION --name at-interviews-cluster
+          command: aws eks update-kubeconfig --profile default --region $AWS_DEFAULT_REGION --name at-interviews-cluster
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
