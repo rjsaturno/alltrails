@@ -12,8 +12,9 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run: export COMMIT_ID=$(git rev-parse --verify --short HEAD)
-      - run: echo commit ID is $COMMIT_ID 
+      - run: 
+          name: Get Commit ID
+          command: echo commit ID is $(git rev-parse --verify --short HEAD)
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
