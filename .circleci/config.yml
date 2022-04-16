@@ -57,7 +57,7 @@ jobs:
       # Build Docker Container
       - run:
           name: Build Docker Container
-          command: docker build --no-cache -t helloworld:$CIRCLE_SHA1 -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$CIRCLE_SHA .
+          command: docker build --no-cache -t helloworld:$CIRCLE_SHA1 -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$CIRCLE_SHA1 .
       #Push Container to ECR
       - run:
           name: Send Container to ECR
