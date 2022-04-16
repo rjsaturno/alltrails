@@ -41,7 +41,7 @@ jobs:
       #Get shortened commit hash 
       - run: 
           name: Get Commit ID
-          command: echo commit ID is CIRCLE_SHA1
+          command: echo commit ID is $CIRCLE_SHA1
       # Update .kube config
       - run:
           name: Update .kube config file w/ eks authenication info
@@ -65,7 +65,7 @@ jobs:
      #Deploy Container
       - run:
           name: Deploy Container
-          command: helm upgrade --install --create-namespace CIRCLE_USERNAME --namespace helloworld --set image.tag=$(git rev-parse --verify --short HEAD) helm/helloworld
+          command: helm upgrade --install --create-namespace $CIRCLE_USERNAME --namespace helloworld --set image.tag=$(git rev-parse --verify --short HEAD) helm/helloworld
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
