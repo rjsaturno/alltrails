@@ -53,7 +53,7 @@ jobs:
       # Login to Amazon ECR
       - run: 
           name: Login into Amazon ECR
-          command: aws ecr get-login-password --profile default --region us-west-2 | docker login --username AWS --password-stdin $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,).dkr.ecr.us-west-2.amazonaws.com
+          command: aws ecr get-login-password --profile default --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.us-west-2.amazonaws.com
       # Build Docker Container
       - run:
           name: Build Docker Container
