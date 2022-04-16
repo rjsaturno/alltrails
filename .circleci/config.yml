@@ -45,11 +45,11 @@ jobs:
       # Update .kube config
       - run:
           name: Update .kube config file w/ eks authenication info
-          command: aws eks update-kubeconfig --profile $KUBE_PROFILE --region $AWS_DEFAULT_REGION --name at-interviews-cluster
+          command: aws eks update-kubeconfig --profile $KUBE_PROFILE --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
       # Use .kube config
       - run:
           name: Use .kube config
-          command: kubectl config use-context arn:aws:eks:$AWS_DEFAULT_REGION:310228935478:cluster/at-interviews-cluster
+          command: kubectl config use-context arn:aws:eks:$AWS_DEFAULT_REGION:310228935478:cluster/$CLUSTER_NAME
       # Login to Amazon ECR
       - run: 
           name: Login into Amazon ECR
@@ -57,7 +57,7 @@ jobs:
       # Build Docker Container
       - run:
           name: Build Docker Container
-          command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
+          command: docker build --no-cache -t helloworld:$CIRCLE_SHA1 -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
       #Push Container to ECR
       - run:
           name: Send Container to ECR
