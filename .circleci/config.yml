@@ -66,9 +66,13 @@ jobs:
       - run:
           name: Deploy Container
           command: helm upgrade --install --create-namespace helloworld  --namespace $CIRCLE_USERNAME --set image.tag=$CIRCLE_SHA1 helm/helloworld
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+
 workflows:
   pipeline-workflow:
     jobs:
-      - build-and-deploy
+      - build-and-deploy:
+          context: 
+            - DEV
+      - build-and-deploy:
+          context: 
+            - PROD
