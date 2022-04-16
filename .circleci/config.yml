@@ -49,19 +49,19 @@ jobs:
       # Use .kube config
       - run:
           name: Use .kube config
-          command: kubectl config use-context arn:aws:eks:us-west-2:310228935478:cluster/at-interviews-cluster
+          command: kubectl config use-context arn:aws:eks:$AWS_DEFAULT_REGION:310228935478:cluster/at-interviews-cluster
       # Login to Amazon ECR
       - run: 
           name: Login into Amazon ECR
-          command: aws ecr get-login-password --profile default --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.us-west-2.amazonaws.com
+          command: aws ecr get-login-password --profile default --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       # Build Docker Container
       - run:
           name: Build Docker Container
-          command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t $AWS_ACCOUNT_NUMBER.dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
+          command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
       #Push Container to ECR
       - run:
           name: Send Container to ECR
-          command: docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD)
+          command: docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD)
      #Deploy Container
       - run:
           name: Deploy Container
