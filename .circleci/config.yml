@@ -21,8 +21,6 @@ jobs:
       #Create remote Docker environment for Docker command execution
       - setup_remote_docker:
           version: 20.10.12
-          #Cache Layers and try to avoid rebuilding
-          docker_layer_caching: true 
       #Setup AWS credentials
       - aws-cli/setup:
           configure-default-region: true 
@@ -67,7 +65,7 @@ jobs:
      #Deploy Container
       - run:
           name: Deploy Container
-          command: helm upgrade --install --create-namespace $CIRCLE_USERNAME --namespace helloworld --set image.tag=$CIRCLE_SHA1 helm/helloworld
+          command: helm upgrade --install --create-namespace helloworld  --namespace $CIRCLE_USERNAME --set image.tag=$CIRCLE_SHA1 helm/helloworld
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
