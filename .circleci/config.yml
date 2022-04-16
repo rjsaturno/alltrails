@@ -57,15 +57,15 @@ jobs:
       # Build Docker Container
       - run:
           name: Build Docker Container
-          command: docker build --no-cache -t helloworld:$CIRCLE_SHA1 -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
+          command: docker build --no-cache -t helloworld:$CIRCLE_SHA1 -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$CIRCLE_SHA .
       #Push Container to ECR
       - run:
           name: Send Container to ECR
-          command: docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD)
+          command: docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/helloworld:$CIRCLE_SHA
      #Deploy Container
       - run:
           name: Deploy Container
-          command: helm upgrade --install --create-namespace $CIRCLE_USERNAME --namespace helloworld --set image.tag=$(git rev-parse --verify --short HEAD) helm/helloworld
+          command: helm upgrade --install --create-namespace $CIRCLE_USERNAME --namespace helloworld --set image.tag=$CIRCLE_SHA helm/helloworld
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
