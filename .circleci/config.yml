@@ -20,6 +20,7 @@ jobs:
       - kubernetes/install
       #Create remote Docker environment for Docker command execution
       - setup_remote_docker:
+          docker_layer_caching: true
           version: 20.10.12
      #Install Helm 3.0
       - run:
@@ -70,9 +71,11 @@ jobs:
 workflows:
   pipeline-workflow:
     jobs:
+      #Build and deploy to dev environment
       - build-and-deploy:
           context: 
             - DEV
+      #Build and deploy to prod environment      
       - build-and-deploy:
           context: 
             - PROD
