@@ -57,11 +57,11 @@ jobs:
       # Build Docker Container
       - run:
           name: Build Docker Container
-          command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,).dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
+          command: docker build --no-cache -t helloworld:$(git rev-parse --verify --short HEAD) -t $AWS_ACCOUNT_NUMBER.dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD) .
       #Push Container to ECR
       - run:
           name: Send Container to ECR
-          command: docker push $(aws --profile default sts get-caller-identity | grep Account | awk '{print $2}' |  tr -d \"\,).dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD)
+          command: docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.us-west-2.amazonaws.com/helloworld:$(git rev-parse --verify --short HEAD)
      #Deploy Container
       - run:
           name: Deploy Container
