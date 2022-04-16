@@ -21,15 +21,6 @@ jobs:
       #Create remote Docker environment for Docker command execution
       - setup_remote_docker:
           version: 20.10.12
-      #Setup AWS credentials
-      - aws-cli/setup:
-          configure-default-region: true 
-          configure-profile-region: true 
-          disable-aws-pager: true 
-          override-installed: false 
-          aws-access-key-id: AWS_ACCESS_KEY_ID 
-          aws-region: AWS_DEFAULT_REGION 
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
      #Install Helm 3.0
       - run:
           name: Install Helm 
