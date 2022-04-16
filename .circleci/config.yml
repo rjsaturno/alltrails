@@ -45,7 +45,7 @@ jobs:
       # Update .kube config
       - run:
           name: Update .kube config file w/ eks authenication info
-          command: aws eks update-kubeconfig --profile default --region $AWS_DEFAULT_REGION --name at-interviews-cluster
+          command: aws eks update-kubeconfig --profile $KUBE_PROFILE --region $AWS_DEFAULT_REGION --name at-interviews-cluster
       # Use .kube config
       - run:
           name: Use .kube config
@@ -53,7 +53,7 @@ jobs:
       # Login to Amazon ECR
       - run: 
           name: Login into Amazon ECR
-          command: aws ecr get-login-password --profile default --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+          command: aws ecr get-login-password --profile $KUBE_PROFILE --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       # Build Docker Container
       - run:
           name: Build Docker Container
