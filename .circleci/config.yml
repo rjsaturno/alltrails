@@ -25,6 +25,15 @@ jobs:
       - run:
           name: Install Helm 
           command: (curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh) && (chmod 700 get_helm.sh) && (./get_helm.sh)
+       #Setup AWS credentials
+      - aws-cli/setup:
+          configure-default-region: true 
+          configure-profile-region: true 
+          disable-aws-pager: true 
+          override-installed: false 
+          aws-access-key-id: AWS_ACCESS_KEY_ID 
+          aws-region: AWS_DEFAULT_REGION 
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
       #Get AWS Account Number
       - run: 
           name: Get AWS Account Number
