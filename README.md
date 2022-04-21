@@ -1,100 +1,72 @@
-# Hello World Sample App
-Welcome!  If you're cloning this repo, in all likelihood you are starting the QA/Build/Release Engineer Homework assignment.  We're so happy that you've made it this far in the process!  By now you should have received a message from HR with login credentials to our Candidate AWS Environment, and the specifics of the Homework Assignment.  The document you're reading now (this README) is intended to help get you into the AWS environment, and that your account has all the permissions it needs to test locally, and actually complete the assignment.  
+# Hello World App Build Pipeline
 
-# Recommended Tooling (for local deployment/testing)
-We recommend having the following tools to hand: 
+This is a build pipeline for a container serving a simple Hello World page using Github + CircleCI.
 
-[Docker](https://www.docker.com/products/docker-desktop)
+This pipeline is translated from the manual deploy script (./local-deploy.sh) provided by the AllTrails interview team, which uses the following tools: Docker, AWS CLI, Kubectl, & Helm
 
-[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+More extensive info on the tool can be found in their repo located at https://github.com/alltrails/at-interviews-helloworld and specific description & requirements for this tool can be found at https://docs.google.com/document/d/1J3yn1rDOBdquOvLaYaEIAW7QLFDP9tdH/edit# . 
 
-[Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#install-with-homebrew-on-macos)
+The build pipeline workflow is outlined as follows:
 
-[Helm](https://helm.sh)
+1.  A commit/change has been pushed to the Github repo and will trigger the pipeline-workflow to run
+2.  Job build-and-deploy 
+	- will checkout the code & spin up docker environment + remote environment
+	- Install tools: AWS CLI, Kubectl, & Helm
+	- Setup AWS Credentials
+	- Update .kube config and login to Amazon ECR
+	-  Build Docker container and push to Amazon ECR
+	- and deploy container 
 
-# AWS Console Access
-You should have received a username and (temporary) password from HR.  With that, you can log into the [AWS Console](at-interviews.signin.aws.amazon.com/) and take a look around, if you are so inclined.  
+Failure reports are sent via email to all CircleCi team members.
 
-# AWS API Access
-Presuming you're on a Linux or MacOS machine, you can create/edit the file `~/.aws/credentials`.  Add a new section similar to the following, substituting the example values for the ones shared by HR: 
-```
-[at-interviews]
-aws_access_key_id =  AKIA....
-aws_secret_access_key = IKGkr....
-```
+#Questions
+1.  How you would modify your pipe to accommodate for dev and prod environments?
 
-To verify, you should now be able to run the command:
-```
-$ aws --profile at-interviews \
-    sts get-caller-identity
-```
-This should output something similar to: 
-```
-{
-    "UserId": "AKIA....",
-    "Account": "310228935478",
-    "Arn": "arn:aws:iam::310228935478:user/your_user_name_here"
-}
-```
+I made use of CircleCI’s contexts and created one for the DEV environment and the PROD environment.
 
-# Manual Build/Deploy Steps
-Our toy application is already able to be built, pushed, and deployed locally. We've got the particulars crammed into the `local-deploy.sh` script, but if you'd prefer a longer-form rundown of what's going on where, read on! 
+Each context contains the following environments variables that can be modified depending on the environment:
 
-## Build
+AWS_ACCESS_KEY_ID
+AWS_ACCOUNT_NUMBER
+AWS_DEFAULT_REGION
+ASW_SECRET_ACCESS_KEY
+CLUSTER_NAME
+KUBE_PROFILE
 
-Confirm all desired changes to the toy application are committed locally (not necessarily pushed), and then:
-```
-$ export COMMIT_ID=$(git rev-parse --verify --short HEAD) # This gives us a short, unique tag that we'll use when building/tagging the Docker image
+My workflow would then run the build-and-deploy job for the DEV and PROD contexts to deploy to each environment.
 
-```
-```
-$ docker build \
-    --no-cache \
-    --build-arg GIT_COMMIT=$COMMIT_ID \
-    -t helloworld:$COMMIT_ID \
-    -t 310228935478.dkr.ecr.us-west-2.amazonaws.com/helloworld:$COMMIT_ID \
-    .
-```
 
-We should now have a local container built and able to be run locally 'in the usual fashion'.
+2.  What challenges you had, what you didn't have time for, and what you would change
 
-## Login to external services
-We'll need to authenticate to some of the external services in order to send our container on its merry way: 
+-CHALLENGES
 
-Elastic Container Repository
-```
-$ aws ecr get-login-password \
-    --region us-west-2 \
-    | docker login \
-    --username AWS \
-    --password-stdin \
-    310228935478.dkr.ecr.us-west-2.amazonaws.com
-```
+--Debugging and Running ./local-deploy.sh
 
-Elastic Kubernetes Service
-```
-aws eks update-kubeconfig \
-    --region us-west-2 \
-    --name at-interviews-cluster
-```
+The first major challenge for me was getting the local-deploy.sh to work on my MacBook. 
+One of the first things I like to do when automating manual processes is to get a very good understanding of how the manual process works. It makes automating the process easier if you understand each step. 
+I had initial issues with installing the required tooling, updating home-brew, running docker locally, and debugging issues with the script itself, specifically this error:
 
-# Push
-```
-$ docker push \
-    310228935478.dkr.ecr.us-west-2.amazonaws.com/helloworld:$COMMIT_ID
-```
-Using the credentials above, this sends our container to ECR where Kubernetes can pull it down and actually deploy it in the next step.  
+Error: UPGRADE FAILED: unable to recognize "": no matches for kind "Ingress" in version "extensions/v1beta1”
 
-# Deploy
-We're using Helm to abstract away as much of the complexity of Kubernetes as we possibly can.  Presuming our container is safely in ECR (above), deployment to Kubernetes and all the associated wiring should be as simple as: 
-```
-helm upgrade \
-    --install \
-    --namespace $(whoami) \
-    --create-namespace \
-    helloworld \
-    --set image.tag=$COMMIT_ID \
-    helm/helloworld
-```
-That should plug n' chug for a minute, then spit out some `kubectl` commands that will have an Internet Accessible URL™ serving up the toy application (it may take up to 5 minutes for DNS to propagate, FWIW).  And that is the manual deploy process, annotated.  You shouldn't need to run everything command-by-command, as that's what the `local-deploy.sh` script is for, but hopefully that gives you some context helpful to completing the homework assignment.  
+I tried my best, but I got to the point where I successfully deployed the container, but the kubectl commands specified would not generate an ATI application URL so I couldn’t actually see the hello world app live. 
 
+—Circle CI Onboarding/Setup
+The other major challenge was learning and using CircleCI at an accelerated pace w/ limited time. 
+I’m most familiar with the Jenkins CI but wanted to implement in CircleCI since that was what AllTrails uses currently. So some time cost was put into learning and setting up an instance for myself.
+
+-DIDN’T HAVE TIME FOR
+—Getting deploy step to work and produce URL locally & in pipeline
+—Verify the URL works in browser
+— Translating the AWS Account verifications & Unique Namespace checks
+— Implementing manual hold/approval for deploy-and-build for PROD environment
+
+- CHANGES
+—Use of Full SHA instead of shortened version
+I wasn’t able to figure out how to get the shortened version of the SHA outside of the git command used in local-deploy.sh but it made the code not as readable so opted to use CircleCI’s env var: CIRCLE_SHA1
+
+—Changes/upgrades to provided ingress.yaml
+I couldn’t get local-deploy.sh to work so I started debugging and figured out it was an issue with the ingress.yml found in  helm/helloworld/templates: 
+
+Error: UPGRADE FAILED: unable to recognize "": no matches for kind "Ingress" in version "extensions/v1beta1"
+
+I did some investigation and upgraded from extensions/v1beta1 to  networking.k8s.io/v1 as well as simplified   it down to bare bones. It doesn’t work perfectly since I can’t get the URL to get produced but the local-deploy.sh finishes successfully. I added the ingress.yml to this in case you’d like to check it out.
