@@ -19,54 +19,58 @@ The build pipeline workflow is outlined as follows:
 
 Failure reports are sent via email to all CircleCi team members.
 
-#Questions
+#QUESTIONS
+
 1.  How you would modify your pipe to accommodate for dev and prod environments?
 
-I made use of CircleCI’s contexts and created one for the DEV environment and the PROD environment.
+	I made use of CircleCI’s contexts and created one for the DEV environment and the PROD environment.
 
-Each context contains the following environments variables that can be modified depending on the environment:
+	Each context contains the following environments variables that can be modified depending on the environment:
 
-AWS_ACCESS_KEY_ID
-AWS_ACCOUNT_NUMBER
-AWS_DEFAULT_REGION
-ASW_SECRET_ACCESS_KEY
-CLUSTER_NAME
-KUBE_PROFILE
+	AWS_ACCESS_KEY_ID
+	AWS_ACCOUNT_NUMBER
+	AWS_DEFAULT_REGION
+	ASW_SECRET_ACCESS_KEY
+	CLUSTER_NAME
+	KUBE_PROFILE
 
-My workflow would then run the build-and-deploy job for the DEV and PROD contexts to deploy to each environment.
+	My workflow would then run the build-and-deploy job for the DEV and PROD contexts to deploy to each environment.
 
 
 2.  What challenges you had, what you didn't have time for, and what you would change
 
--CHALLENGES
+- CHALLENGES
 
---Debugging and Running ./local-deploy.sh
+	--Debugging and Running ./local-deploy.sh
 
-The first major challenge for me was getting the local-deploy.sh to work on my MacBook. 
-One of the first things I like to do when automating manual processes is to get a very good understanding of how the manual process works. It makes automating the process easier if you understand each step. 
-I had initial issues with installing the required tooling, updating home-brew, running docker locally, and debugging issues with the script itself, specifically this error:
+	The first major challenge for me was getting the local-deploy.sh to work on my MacBook. 
+	One of the first things I like to do when automating manual processes is to get a very good understanding of how the manual process works. It makes automating the process easier if you understand each step. 
+	I had initial issues with installing the required tooling, updating home-brew, running docker locally, and debugging issues with the script itself, specifically this error:
 
-Error: UPGRADE FAILED: unable to recognize "": no matches for kind "Ingress" in version "extensions/v1beta1”
+	Error: UPGRADE FAILED: unable to recognize "": no matches for kind "Ingress" in version "extensions/v1beta1”
 
-I tried my best, but I got to the point where I successfully deployed the container, but the kubectl commands specified would not generate an ATI application URL so I couldn’t actually see the hello world app live. 
+	I tried my best, but I got to the point where I successfully deployed the container, but the kubectl commands specified would not generate an ATI application URL so I couldn’t actually see the hello world app live. 
 
-—Circle CI Onboarding/Setup
-The other major challenge was learning and using CircleCI at an accelerated pace w/ limited time. 
-I’m most familiar with the Jenkins CI but wanted to implement in CircleCI since that was what AllTrails uses currently. So some time cost was put into learning and setting up an instance for myself.
+	— Circle CI Onboarding/Setup
+	
+	The other major challenge was learning and using CircleCI at an accelerated pace w/ limited time. 
+	I’m most familiar with the Jenkins CI but wanted to implement in CircleCI since that was what AllTrails uses currently. So some time cost was put into learning and setting up an instance for myself.
 
--DIDN’T HAVE TIME FOR
-—Getting deploy step to work and produce URL locally & in pipeline
-—Verify the URL works in browser
-— Translating the AWS Account verifications & Unique Namespace checks
-— Implementing manual hold/approval for deploy-and-build for PROD environment
+- DIDN’T HAVE TIME FOR
+
+	- Getting deploy step to work and produce URL locally & in pipeline
+	- Verify the URL works in browser
+	- Translating the AWS Account verifications & Unique Namespace checks
+	- Implementing manual hold/approval for deploy-and-build for PROD environment
 
 - CHANGES
-—Use of Full SHA instead of shortened version
-I wasn’t able to figure out how to get the shortened version of the SHA outside of the git command used in local-deploy.sh but it made the code not as readable so opted to use CircleCI’s env var: CIRCLE_SHA1
 
-—Changes/upgrades to provided ingress.yaml
-I couldn’t get local-deploy.sh to work so I started debugging and figured out it was an issue with the ingress.yml found in  helm/helloworld/templates: 
+	—Use of Full SHA instead of shortened version
+	I wasn’t able to figure out how to get the shortened version of the SHA outside of the git command used in local-deploy.sh but it made the code not as readable so opted to use CircleCI’s env var: CIRCLE_SHA1
 
-Error: UPGRADE FAILED: unable to recognize "": no matches for kind "Ingress" in version "extensions/v1beta1"
+	—Changes/upgrades to provided ingress.yaml
+	I couldn’t get local-deploy.sh to work so I started debugging and figured out it was an issue with the ingress.yml found in  helm/helloworld/templates: 
 
-I did some investigation and upgraded from extensions/v1beta1 to  networking.k8s.io/v1 as well as simplified   it down to bare bones. It doesn’t work perfectly since I can’t get the URL to get produced but the local-deploy.sh finishes successfully. I added the ingress.yml to this in case you’d like to check it out.
+	Error: UPGRADE FAILED: unable to recognize "": no matches for kind "Ingress" in version "extensions/v1beta1"
+
+	I did some investigation and upgraded from extensions/v1beta1 to  networking.k8s.io/v1 as well as simplified   it down to bare bones. It doesn’t work perfectly since I can’t get the URL to get produced but the local-deploy.sh finishes successfully. I added the ingress.yml to this in case you’d like to check it out.
